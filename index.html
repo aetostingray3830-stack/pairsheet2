@@ -712,6 +712,7 @@ function applyTagColor(picker) {
 /* ========== TRAITS ========== */
   function buildRelationFields(id, labels) {
   const el = document.getElementById(id);
+  if (!el) return;
   el.innerHTML = "";
 
   labels.forEach((label) => {
@@ -1061,14 +1062,14 @@ function restoreInputsAfterExport(replaced) {
 
 /* ========== INIT ========== */
 buildStats('stats1'); buildStats('stats2');
-buildRelationFields("rel1a", ["Relationship"]);
-buildRelationFields("rel1b", ["First Impression"]);
-buildRelationFields("rel1c", ["Current Distance"]);
+buildRelationFields("rel1a", ["入力..."]);
+buildRelationFields("rel1b", ["入力..."]);
+buildRelationFields("rel1c", ["入力..."]);
 buildRelationFields("rel1d", ["Keyword 1", "Keyword 2", "Keyword 3"]);
 
-buildRelationFields("rel2a", ["Relationship"]);
-buildRelationFields("rel2b", ["First Impression"]);
-buildRelationFields("rel2c", ["Current Distance"]);
+buildRelationFields("rel2a", ["入力..."]);
+buildRelationFields("rel2b", ["入力..."]);
+buildRelationFields("rel2c", ["入力..."]);
 buildRelationFields("rel2d", ["Keyword 1", "Keyword 2", "Keyword 3"]);
 </script>
 </body>
