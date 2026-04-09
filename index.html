@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -21,16 +20,14 @@ body {
   overflow-x: hidden;
 }
 
-  
- :root {
+:root {
   --panel-text-color: rgba(255,255,255,0.96);
   --panel-label-color: rgba(255,255,255,0.72);
   --panel-title-color: rgba(255,255,255,0.95);
   --panel-bullet-color: rgba(255,255,255,0.55);
 }
 
-
-  .header-name-input,
+.header-name-input,
 .pair-name-display input,
 .field-input,
 .stat-input,
@@ -38,8 +35,6 @@ body {
 .tag-input {
   color: var(--panel-text-color);
 }
-
-  
 
 /* ── 背景レイヤー ── */
 #bgLayer {
@@ -94,7 +89,7 @@ body {
 /* ── SHEET ── */
 #sheet {
   position: relative;
-  width: 1120px;
+  width: 1400px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow:
@@ -119,8 +114,8 @@ body {
   background: rgba(255,255,255,0.08);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.12);
-  display: grid; grid-template-columns: 200px 1fr 200px;
-  align-items: center; padding: 10px 16px; min-height: 60px;
+  display: grid; grid-template-columns: 260px 1fr 260px;
+  align-items: center; padding: 10px 40px; min-height: 60px;
 }
 .header-name { display: flex; flex-direction: column; }
 .header-name.right { text-align: right; }
@@ -158,32 +153,33 @@ body {
 
 .sheet-body {
   display: grid;
-  grid-template-columns: 280px 1fr 280px;
+  grid-template-columns: 320px 1fr 320px;
   min-height: 700px;
 }
 
 /* char panel */
 .char-panel {
-  background: transparent;
+  background: transparent !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-right: 1px solid rgba(255,255,255,0.08);
-  padding: 12px;
+  padding: 16px 24px 16px 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 0;
 }
-.char-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.08); }
+.char-panel:last-child {
+  border-right: none;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
 
-  .char-panel:last-child .field-label {
+.char-panel:last-child .field-label {
   text-align: right;
 }
-
-  /* 右側パネルは全部右寄せ */
 .char-panel:last-child .field-group {
   text-align: right;
 }
-
 .char-panel:last-child .field-input {
   text-align: right;
 }
@@ -217,7 +213,6 @@ body {
 .tag-wrap:hover .tag-color-btn { opacity: 1; }
 
 /* icon row */
-.icon-row { display: flex; gap: 5px; align-items: center; }
 .icon-box-input {
   width: 36px; height: 26px;
   background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12);
@@ -242,26 +237,31 @@ body {
   color: var(--panel-text-color);
   outline: none;
   width: 100%;
+  min-width: 0;
   padding: 2px 0;
   font-family: 'Noto Sans JP', sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .field-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
 /* stats */
-.stats-section { margin-top: 4px; }
-.stat-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.stats-section { margin-top: 4px; width: 100%; align-self: stretch; }
+.stat-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; width: 100%; }
 .stat-label {
   font-size: 9px;
   color: var(--panel-label-color);
   width: 26px;
   flex-shrink: 0;
   text-transform: uppercase;
+  text-align: left;
 }
-.stat-bar-wrap { flex: 1; height: 10px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden; cursor: pointer; }
+.stat-bar-wrap { flex: 1; min-width: 0; height: 10px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden; cursor: pointer; }
 .stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.15s; background: #7c3aed; }
 .stat-input {
   width: 26px;
+  flex-shrink: 0;
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(255,255,255,0.2);
@@ -271,6 +271,7 @@ body {
   outline: none;
   font-family: 'Noto Sans JP', sans-serif;
 }
+
 /* traits */
 .section-title {
   font-family: 'Zen Antique', serif;
@@ -296,26 +297,23 @@ body {
   font-family: 'Noto Sans JP', sans-serif;
   padding: 2px 0;
 }
-  .trait-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
+.trait-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
 
-  .relation-list {
+.relation-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-
 .relation-item {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-
 .relation-label {
   font-size: 9px;
   color: var(--panel-label-color);
   letter-spacing: 0.5px;
 }
-
 .relation-input {
   background: transparent;
   border: none;
@@ -325,43 +323,15 @@ body {
   outline: none;
   font-family: 'Noto Sans JP', sans-serif;
   padding: 2px 0;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 .relation-input:focus {
   border-bottom-color: rgba(255,255,255,0.8);
 }
 
-/* 右側パネルだけミラー */
-.char-panel:last-child .relation-list {
-  align-items: flex-end;
-}
-
-.char-panel:last-child .relation-item {
-  align-items: flex-end;
-  text-align: right;
-}
-
-.char-panel:last-child .relation-input {
-  text-align: right;
-}
-
-  .relation-input {
-  width: 100%;
-  max-width: 160px;
-}
-
-  .char-panel:last-child .relation-label {
-  text-align: right;
-}
-
-.char-panel:last-child .section-title {
-  text-align: right;
-}
-
-  .char-panel:last-child .relation-input {
-  text-align: right;
-}
-  
 /* ── CENTER PANEL ── */
 .center-panel {
   background: transparent;
@@ -397,10 +367,9 @@ body {
 .color-swatch.active { border-color: white; }
 .bg-custom { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; padding: 0; }
 
-/* ── FLOAT LAYER (textboxes + images) ── */
+/* ── FLOAT LAYER ── */
 #floatLayer { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
 
-/* floating textbox */
 .float-txt {
   position: absolute; min-width: 80px; min-height: 28px;
   background: transparent; border: none; border-radius: 4px;
@@ -422,7 +391,6 @@ body {
 .float-item:hover .float-del, .float-item.selected .float-del { opacity: 1; }
 .float-txt:hover .float-del, .float-txt.selected .float-del { opacity: 1; }
 
-/* floating image */
 .float-img-wrap {
   position: absolute; cursor: move; z-index: 11; user-select: none;
   border: none; border-radius: 2px;
@@ -432,7 +400,6 @@ body {
 .float-img-wrap .float-del { top: 2px; right: 3px; }
 .float-img-wrap:hover .float-del, .float-img-wrap.selected .float-del { opacity: 1; }
 
-/* resize handle */
 .resize-handle {
   position: absolute; width: 14px; height: 14px; border-radius: 50%;
   background: rgba(255,255,255,0.7); cursor: se-resize;
@@ -447,22 +414,16 @@ body {
 .export-overlay.show { display: flex; }
 .export-spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.15); border-top-color: rgba(255,255,255,0.8); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.export-overlay p { color: #c084fc; font-size: 15px; }
 
-  /* 書き出し用：ぼかしの代替 */
+/* ── 書き出し用 ── */
 .export-mode .char-panel,
-.export-mode .panel-inner,
 .export-mode .sheet-header {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   background: transparent !important;
 }
 
-  .char-panel,
-.panel-inner {
-  background: transparent !important;
-}
-  
+/* 書き出し時のspan置換スタイル（不使用・削除済み） */
 </style>
 </head>
 <body>
@@ -478,7 +439,6 @@ body {
   <input type="file" id="floatImgInput" accept="image/*" style="display:none" onchange="addFloatImage(this)">
   <span class="sep">|</span>
 
-  <!-- text style -->
   <div class="toolbar-group" id="textToolGroup">
     <label>文字</label>
     <input type="color" id="txtColor" value="#ffffff" oninput="applyTxtStyle()">
@@ -494,26 +454,25 @@ body {
       <option value="horizontal">横</option><option value="vertical">縦</option>
     </select>
     <label>フォント</label>
-<select id="txtFont" onchange="applyTxtStyle()">
-  <option value="'Noto Sans JP', sans-serif">Noto Sans</option>
-  <option value="'Dela Gothic One', cursive">Dela Gothic One</option>
-  <option value="'Kaisei Decol', serif">Kaisei Decol</option>
-  <option value="'Rampart One', cursive">Rampart One</option>
-  <option value="'Reggae One', cursive">Reggae One</option>
-  <option value="'BIZ UDMincho', serif">BIZ UDMincho</option>
-  <option value="'DotGothic16', sans-serif">DotGothic16</option>
-  <option value="'Gothic A1', sans-serif">Gothic A1</option>
-</select>
+    <select id="txtFont" onchange="applyTxtStyle()">
+      <option value="'Noto Sans JP', sans-serif">Noto Sans</option>
+      <option value="'Dela Gothic One', cursive">Dela Gothic One</option>
+      <option value="'Kaisei Decol', serif">Kaisei Decol</option>
+      <option value="'Rampart One', cursive">Rampart One</option>
+      <option value="'Reggae One', cursive">Reggae One</option>
+      <option value="'BIZ UDMincho', serif">BIZ UDMincho</option>
+      <option value="'DotGothic16', sans-serif">DotGothic16</option>
+      <option value="'Gothic A1', sans-serif">Gothic A1</option>
+    </select>
   </div>
 
   <span class="sep">|</span>
 
-<div class="toolbar-group">
-  <label>入力文字</label>
-  <input type="color" value="#ffffff" oninput="document.documentElement.style.setProperty('--panel-text-color', this.value)">
-</div>
-  
-  <!-- page background -->
+  <div class="toolbar-group">
+    <label>入力文字</label>
+    <input type="color" value="#ffffff" oninput="document.documentElement.style.setProperty('--panel-text-color', this.value)">
+  </div>
+
   <div class="toolbar-group">
     <label>背景</label>
     <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="document.getElementById('bgImgInput').click()">ページ画像</button>
@@ -524,7 +483,6 @@ body {
     <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="clearBg()">クリア</button>
   </div>
 
-  <!-- stat color -->
   <div class="toolbar-group" id="statGroup">
     <label>STATバー</label>
     <div class="tc active" style="background:#888" onclick="setStatColor('#888',this)"></div>
@@ -535,8 +493,6 @@ body {
     <div class="tc" style="background:#aaa" onclick="setStatColor('#aaa',this)"></div>
     <input type="color" class="tc-inp" value="#7c3aed" onchange="setStatColor(this.value,null)">
   </div>
-
-  
 </div>
 
 <div class="canvas-wrap">
@@ -557,9 +513,9 @@ body {
 
     <!-- BODY -->
     <div class="sheet-body">
+
       <!-- LEFT -->
       <div class="char-panel">
-          <div class="panel-inner">
         <div class="portrait-row">
           <div class="portrait-box" id="p1box">
             <div class="upload-hint">クリックして<br>画像追加</div>
@@ -583,12 +539,12 @@ body {
           <div class="field-group"><div class="field-label">GENDER</div><input class="field-input" placeholder="性別"></div>
         </div>
         <div class="stats-section" id="stats1"></div>
-       <div><div class="section-title">Relationship</div><div class="relation-list" id="rel1a"></div></div>
-<div><div class="section-title">First Impression</div><div class="relation-list" id="rel1b"></div></div>
-<div><div class="section-title">Current Distance</div><div class="relation-list" id="rel1c"></div></div>
-<div><div class="section-title">Keywords</div><div class="relation-list" id="rel1d"></div></div>
+        <div><div class="section-title">Relationship</div><div class="relation-list" id="rel1a"></div></div>
+        <div><div class="section-title">First Impression</div><div class="relation-list" id="rel1b"></div></div>
+        <div><div class="section-title">Current Distance</div><div class="relation-list" id="rel1c"></div></div>
+        <div><div class="section-title">Keywords</div><div class="relation-list" id="rel1d"></div></div>
       </div>
-</div>
+
       <!-- CENTER -->
       <div class="center-panel" id="centerPanel">
         <div class="center-label" id="centerLabel">中央背景はツールバーの「背景画像」から追加</div>
@@ -605,55 +561,52 @@ body {
         </div>
       </div>
 
-     <!-- RIGHT -->
-      
-<div class="char-panel">
-  <div class="panel-inner">
-  <div class="portrait-row" style="flex-direction:row-reverse">
-    <div class="portrait-box" id="p2box">
-      <div class="upload-hint">クリックして<br>画像追加</div>
-      <img id="p2img" src="" alt="" style="display:none">
-      <input type="file" accept="image/*" onchange="loadPortrait(this,'p2img','p2box')">
-      <input type="color" class="portrait-color-btn" value="#888888" title="背景色" onchange="setPortraitColor('p2box',this.value)" onclick="event.stopPropagation()">
-    </div>
-    <div class="tags-col" id="tags2">
-      <div class="tag-wrap"><input class="tag-input" value="HAIR"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
-      <div class="tag-wrap"><input class="tag-input" value="EYE"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
-      <div class="tag-wrap"><input class="tag-input" value="ETC"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
-    </div>
-  </div>
+      <!-- RIGHT -->
+      <div class="char-panel">
+        <div class="portrait-row">
+          <div class="portrait-box" id="p2box">
+            <div class="upload-hint">クリックして<br>画像追加</div>
+            <img id="p2img" src="" alt="" style="display:none">
+            <input type="file" accept="image/*" onchange="loadPortrait(this,'p2img','p2box')">
+            <input type="color" class="portrait-color-btn" value="#888888" title="背景色" onchange="setPortraitColor('p2box',this.value)" onclick="event.stopPropagation()">
+          </div>
+          <div class="tags-col" id="tags2">
+            <div class="tag-wrap"><input class="tag-input" value="HAIR"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+            <div class="tag-wrap"><input class="tag-input" value="EYE"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+            <div class="tag-wrap"><input class="tag-input" value="ETC"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+          </div>
+        </div>
 
-  <div class="two-col">
-    <div class="field-group">
-      <div class="field-label">AGE</div>
-      <input class="field-input" type="text" placeholder="--">
-    </div>
-    <div class="field-group">
-      <div class="field-label">NAME</div>
-      <input id="charName2" class="field-input" placeholder="名前" oninput="syncName(2,this.value)">
-    </div>
-  </div>
+        <div class="two-col">
+          <div class="field-group">
+            <div class="field-label">AGE</div>
+            <input class="field-input" type="text" placeholder="--">
+          </div>
+          <div class="field-group">
+            <div class="field-label">NAME</div>
+            <input id="charName2" class="field-input" placeholder="名前" oninput="syncName(2,this.value)">
+          </div>
+        </div>
 
-  <div class="two-col">
-    <div class="field-group">
-      <div class="field-label">JOB</div>
-      <input class="field-input" placeholder="職業">
-    </div>
-    <div class="field-group">
-      <div class="field-label">GENDER</div>
-      <input class="field-input" placeholder="性別">
-    </div>
-  </div>
+        <div class="two-col">
+          <div class="field-group">
+            <div class="field-label">JOB</div>
+            <input class="field-input" placeholder="職業">
+          </div>
+          <div class="field-group">
+            <div class="field-label">GENDER</div>
+            <input class="field-input" placeholder="性別">
+          </div>
+        </div>
 
-  <div class="stats-section" id="stats2"></div>
+        <div class="stats-section" id="stats2"></div>
 
-  <div><div class="section-title">Relationship</div><div class="relation-list" id="rel2a"></div></div>
-<div><div class="section-title">First Impression</div><div class="relation-list" id="rel2b"></div></div>
-<div><div class="section-title">Current Distance</div><div class="relation-list" id="rel2c"></div></div>
-<div><div class="section-title">Keywords</div><div class="relation-list" id="rel2d"></div></div>
-</div>
-  </div>
-</div>
+        <div><div class="section-title">Relationship</div><div class="relation-list" id="rel2a"></div></div>
+        <div><div class="section-title">First Impression</div><div class="relation-list" id="rel2b"></div></div>
+        <div><div class="section-title">Current Distance</div><div class="relation-list" id="rel2c"></div></div>
+        <div><div class="section-title">Keywords</div><div class="relation-list" id="rel2d"></div></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -667,58 +620,39 @@ body {
 function updatePanelContrast(bg) {
   const hex = normalizeHex(bg);
   if (!hex) return;
-
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  const brightness = r * 0.299 + g * 0.587 + b * 0.114;
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  const brightness = r*0.299 + g*0.587 + b*0.114;
   const root = document.documentElement;
-
   if (brightness > 170) {
-    root.style.setProperty("--panel-text-color", "rgba(30,30,30,0.95)");
-    root.style.setProperty("--panel-label-color", "rgba(40,40,40,0.75)");
-    root.style.setProperty("--panel-title-color", "rgba(20,20,20,0.9)");
-    root.style.setProperty("--panel-bullet-color", "rgba(40,40,40,0.6)");
+    root.style.setProperty("--panel-text-color","rgba(30,30,30,0.95)");
+    root.style.setProperty("--panel-label-color","rgba(40,40,40,0.75)");
+    root.style.setProperty("--panel-title-color","rgba(20,20,20,0.9)");
+    root.style.setProperty("--panel-bullet-color","rgba(40,40,40,0.6)");
   } else {
-    root.style.setProperty("--panel-text-color", "rgba(255,255,255,0.9)");
-    root.style.setProperty("--panel-label-color", "rgba(255,255,255,0.45)");
-    root.style.setProperty("--panel-title-color", "rgba(255,255,255,0.7)");
-    root.style.setProperty("--panel-bullet-color", "rgba(255,255,255,0.3)");
+    root.style.setProperty("--panel-text-color","rgba(255,255,255,0.9)");
+    root.style.setProperty("--panel-label-color","rgba(255,255,255,0.45)");
+    root.style.setProperty("--panel-title-color","rgba(255,255,255,0.7)");
+    root.style.setProperty("--panel-bullet-color","rgba(255,255,255,0.3)");
   }
 }
 
 function normalizeHex(color) {
   if (!color) return null;
   if (color.startsWith("#")) {
-    if (color.length === 4) {
-      return (
-        "#" +
-        color[1] + color[1] +
-        color[2] + color[2] +
-        color[3] + color[3]
-      );
-    }
+    if (color.length === 4) return "#"+color[1]+color[1]+color[2]+color[2]+color[3]+color[3];
     return color;
   }
   return null;
 }
-  
+
 /* ========== STATE ========== */
 const STATS = [
-{ l:'体格', v:60 },
-{ l:'運動', v:55 },
-{ l:'知性', v:70 },
-{ l:'外見', v:80 },
-{ l:'社交', v:65 },
-{ l:'精神', v:50 },
-{ l:'色気', v:75 },
-{ l:'人気', v:85 }
+  {l:'体格',v:60},{l:'運動',v:55},{l:'知性',v:70},{l:'外見',v:80},
+  {l:'社交',v:65},{l:'精神',v:50},{l:'色気',v:75},{l:'人気',v:85}
 ];
-
 const MAX = 100;
 let statColor = '#888';
-let selectedItem = null; // currently selected float-txt or float-img-wrap
+let selectedItem = null;
 
 /* ========== STATS ========== */
 function buildStats(id) {
@@ -750,10 +684,6 @@ function setStatColor(c, sw) {
 }
 
 /* ========== TAGS ========== */
-function setTagColor(bg, text, sw) {
-  document.querySelectorAll('.tag-input').forEach(t => { t.style.background=bg; t.style.color=text; });
-  if(sw) { document.querySelectorAll('#tagGroup .tc').forEach(s=>s.classList.remove('active')); sw.classList.add('active'); }
-}
 function applyTagColor(picker) {
   const bg = picker.value;
   const inp = picker.previousElementSibling;
@@ -762,12 +692,11 @@ function applyTagColor(picker) {
   inp.style.color = (r*0.299+g*0.587+b*0.114)>128 ? '#222' : '#fff';
 }
 
-/* ========== TRAITS ========== */
-  function buildRelationFields(id, labels) {
+/* ========== RELATION FIELDS ========== */
+function buildRelationFields(id, labels) {
   const el = document.getElementById(id);
   if (!el) return;
   el.innerHTML = "";
-
   labels.forEach((label) => {
     const d = document.createElement("div");
     d.className = "relation-item";
@@ -819,11 +748,10 @@ function clearBg() {
   const bg = document.getElementById("bgLayer");
   bg.style.background = "linear-gradient(135deg, #1a0a2e 0%, #0a1a2e 50%, #0e0a1e 100%)";
   bg.style.backgroundImage = "none";
-
-  document.documentElement.style.setProperty("--panel-text-color", "rgba(255,255,255,0.9)");
-  document.documentElement.style.setProperty("--panel-label-color", "rgba(255,255,255,0.45)");
-  document.documentElement.style.setProperty("--panel-title-color", "rgba(255,255,255,0.7)");
-  document.documentElement.style.setProperty("--panel-bullet-color", "rgba(255,255,255,0.3)");
+  document.documentElement.style.setProperty("--panel-text-color","rgba(255,255,255,0.9)");
+  document.documentElement.style.setProperty("--panel-label-color","rgba(255,255,255,0.45)");
+  document.documentElement.style.setProperty("--panel-title-color","rgba(255,255,255,0.7)");
+  document.documentElement.style.setProperty("--panel-bullet-color","rgba(255,255,255,0.3)");
 }
 
 /* ========== SYNC NAME ========== */
@@ -839,7 +767,6 @@ function selectItem(el) {
   selectedItem = el;
   if(el) el.classList.add('selected');
 }
-
 document.addEventListener('mousedown', e => {
   if(!selectedItem) return;
   if(selectedItem.contains(e.target)) return;
@@ -851,13 +778,11 @@ document.addEventListener('mousedown', e => {
 function addTextBox() {
   const layer = document.getElementById('floatLayer');
   layer.style.pointerEvents = 'auto';
-
   const box = document.createElement('div');
   box.className = 'float-txt';
   box.style.left = '40px';
   box.style.top = (40 + layer.querySelectorAll('.float-txt').length * 44) + 'px';
   box.style.width = '160px';
-
   box.innerHTML = `
     <div class="free-text" contenteditable="true">テキストを入力…</div>
     <button class="float-del" onclick="removeFloat(this.parentElement)">✕</button>
@@ -865,27 +790,16 @@ function addTextBox() {
       <path d="M2 10 L10 2 M6 10 L10 6" stroke="white" stroke-width="1.5"/>
     </svg>
   `;
-
   makeDraggable(box, true);
   makeResizableTxt(box);
-
   box.addEventListener('mousedown', e => {
-    if (
-      e.target.tagName !== 'BUTTON' &&
-      e.target.tagName !== 'path' &&
-      e.target.tagName !== 'svg'
-    ) {
-      selectItem(box);
-    }
+    if(e.target.tagName!=='BUTTON'&&e.target.tagName!=='path'&&e.target.tagName!=='svg') selectItem(box);
   });
-
   layer.appendChild(box);
   selectItem(box);
-
   const text = box.querySelector('.free-text');
   text.style.fontFamily = document.getElementById("txtFont").value;
   text.focus();
-
   document.execCommand?.('selectAll', false, null);
 }
 
@@ -897,15 +811,12 @@ function addFloatImage(inp) {
   const url = URL.createObjectURL(inp.files[0]);
   const layer = document.getElementById('floatLayer');
   layer.style.pointerEvents = 'auto';
-
   const wrap = document.createElement('div');
   wrap.className = 'float-img-wrap';
   wrap.style.left = '60px';
   wrap.style.top = (60 + layer.querySelectorAll('.float-img-wrap').length * 20) + 'px';
-
   const img = document.createElement('img');
   img.src = url;
-  // Set wrap size from natural image ratio once loaded
   img.onload = () => {
     const ratio = img.naturalWidth / img.naturalHeight;
     const initW = 200;
@@ -913,25 +824,17 @@ function addFloatImage(inp) {
     wrap.style.height = Math.round(initW / ratio) + 'px';
     wrap._ratio = ratio;
   };
-
   const del = document.createElement('button');
-  del.className = 'float-del';
-  del.textContent = '✕';
+  del.className = 'float-del'; del.textContent = '✕';
   del.onclick = () => removeFloat(wrap);
-
   const handle = document.createElement('div');
   handle.className = 'resize-handle';
-
-  wrap.appendChild(img);
-  wrap.appendChild(del);
-  wrap.appendChild(handle);
-
+  wrap.appendChild(img); wrap.appendChild(del); wrap.appendChild(handle);
   makeDraggable(wrap, false);
   makeResizableImg(wrap, handle);
   wrap.addEventListener('mousedown', e => {
     if(e.target.tagName!=='BUTTON'&&!e.target.classList.contains('resize-handle')) selectItem(wrap);
   });
-
   layer.appendChild(wrap);
   selectItem(wrap);
   inp.value = '';
@@ -967,7 +870,6 @@ function makeResizableTxt(el) {
   document.addEventListener('mousemove', e => { if(!resizing) return; el.style.width=Math.max(60,sw+e.clientX-sx)+'px'; el.style.height=Math.max(28,sh+e.clientY-sy)+'px'; });
   document.addEventListener('mouseup', ()=>{ resizing=false; });
 }
-
 function makeResizableImg(el, handle) {
   let resizing=false, sx,sy,sw,sh,ratio;
   handle.addEventListener('mousedown', e => {
@@ -987,7 +889,6 @@ function makeResizableImg(el, handle) {
 /* ========== TEXT STYLE ========== */
 function applyTxtStyle() {
   if (!selectedItem || !selectedItem.classList.contains("float-txt")) return;
-
   const text = selectedItem.querySelector(".free-text");
   const color = document.getElementById("txtColor").value;
   const size = document.getElementById("txtSize").value;
@@ -995,13 +896,11 @@ function applyTxtStyle() {
   const weight = document.getElementById("txtWeight").value;
   const mode = document.getElementById("txtMode").value;
   const font = document.getElementById("txtFont").value;
-
   text.style.color = color;
   text.style.fontSize = size + "px";
   text.style.textAlign = align;
   text.style.fontWeight = weight;
   text.style.fontFamily = font;
-
   if (mode === "vertical") {
     text.style.writingMode = "vertical-rl";
     text.style.textOrientation = "upright";
@@ -1009,14 +908,7 @@ function applyTxtStyle() {
     text.style.writingMode = "horizontal-tb";
     text.style.textOrientation = "mixed";
   }
-
   document.getElementById("txtSizeVal").textContent = size;
-}
-
-function rgbToHex(str) {
-  if(!str||str.startsWith('#')) return str||'#ffffff';
-  const m=str.match(/\d+/g); if(!m) return '#ffffff';
-  return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');
 }
 
 /* ========== RESET ========== */
@@ -1054,7 +946,7 @@ async function exportPNG() {
   });
 
   const replaced = replaceInputsForExport();
-  await new Promise(r => setTimeout(r, 160));
+  await new Promise(r => setTimeout(r, 200));
 
   try {
     const sheetCanvas = await html2canvas(sheet, {
@@ -1084,7 +976,6 @@ async function exportPNG() {
     finalCanvas.width = sheetCanvas.width;
     finalCanvas.height = sheetCanvas.height;
     const ctx = finalCanvas.getContext('2d');
-
     ctx.drawImage(bgCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
     ctx.drawImage(sheetCanvas, 0, 0);
 
@@ -1097,9 +988,7 @@ async function exportPNG() {
   }
 
   restoreInputsAfterExport(replaced);
-  snapData.forEach(({ wrap, prevH }) => {
-    wrap.style.height = prevH;
-  });
+  snapData.forEach(({ wrap, prevH }) => { wrap.style.height = prevH; });
 
   sheet.classList.remove('export-mode');
   document.getElementById('colorPickRow').style.display = 'flex';
@@ -1112,64 +1001,77 @@ async function exportPNG() {
   ov.classList.remove('show');
 }
 
+
+
+/* ========== INPUT → SPAN 置換 ========== */
 function replaceInputsForExport() {
   const targets = document.querySelectorAll(
-    '.tag-input, .field-input, .trait-input, .relation-input, .stat-input, .header-name-input, .pair-name-display input, .icon-box-input'
+    '#sheet .tag-input, #sheet .field-input, #sheet .trait-input, #sheet .relation-input, #sheet .stat-input, #sheet .header-name-input, #sheet .pair-name-display input, #sheet .icon-box-input'
   );
-
   const replaced = [];
 
   targets.forEach((input) => {
-    const span = document.createElement('span');
     const cs = getComputedStyle(input);
+    const isStat = input.classList.contains('stat-input');
+    const isIcon = input.classList.contains('icon-box-input');
 
-    span.textContent = input.value || '\u200B';
-    span.style.cssText = `
-      display:inline-block;
-      width:${cs.width};
-      min-height:${cs.height};
-      font:${cs.font};
-      color:${cs.color};
-      background:${cs.backgroundColor};
-      border-top:${cs.borderTop};
-      border-right:${cs.borderRight};
-      border-bottom:${cs.borderBottom};
-      border-left:${cs.borderLeft};
-      padding:${cs.padding};
-      line-height:${cs.lineHeight};
-      letter-spacing:${cs.letterSpacing};
-      text-align:${cs.textAlign};
-      white-space:pre-wrap;
-      vertical-align:middle;
-      box-sizing:border-box;
-      border-radius:${cs.borderRadius};
-    `;
+    // inputと同じ表示領域を持つdivで置換
+    const div = document.createElement('div');
+    const hasValue = input.value && input.value.trim() !== '';
+    div.textContent = hasValue ? input.value : (input.placeholder || '');
 
-    if (
-      input.classList.contains('header-name-input') ||
-      input.closest('.pair-name-display')
-    ) {
-      span.style.width = '100%';
+    div.style.fontFamily    = cs.fontFamily;
+    div.style.fontSize      = cs.fontSize;
+    div.style.fontWeight    = cs.fontWeight;
+    // valueがなくplaceholderを表示している場合は薄い色
+    div.style.color         = hasValue ? cs.color : 'rgba(255,255,255,0.25)';
+    div.style.letterSpacing = cs.letterSpacing;
+    div.style.textAlign     = cs.textAlign;
+    div.style.paddingTop    = cs.paddingTop;
+    div.style.paddingBottom = cs.paddingBottom;
+    div.style.paddingLeft   = cs.paddingLeft;
+    div.style.paddingRight  = cs.paddingRight;
+    div.style.borderBottom  = cs.borderBottom;
+    div.style.lineHeight    = cs.lineHeight;
+    div.style.whiteSpace    = 'pre-wrap';
+    div.style.wordBreak     = 'break-word';
+    div.style.boxSizing     = 'border-box';
+    div.style.overflow      = 'hidden';
+    div.style.background    = cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? 'transparent' : cs.backgroundColor;
+    div.style.borderRadius  = cs.borderRadius;
+    div.style.minHeight     = cs.height;
+
+    if (isStat || isIcon) {
+      // flex行の中で固定幅を維持
+      div.style.width      = cs.width;
+      div.style.flexShrink = '0';
+      div.style.display    = 'inline-block';
+    } else if (input.closest('.pair-name-display')) {
+      div.style.width   = '100%';
+      div.style.display = 'block';
+    } else {
+      div.style.width   = '100%';
+      div.style.display = 'block';
     }
 
     input.style.display = 'none';
-    input.parentNode.insertBefore(span, input.nextSibling);
-    replaced.push({ input, span });
+    input.parentNode.insertBefore(div, input.nextSibling);
+    replaced.push({ input, div });
   });
 
   return replaced;
 }
+
 function restoreInputsAfterExport(replaced) {
-  replaced.forEach(({input,span})=>{ span.remove(); input.style.display=''; });
+  replaced.forEach(({ input, div }) => { div.remove(); input.style.display = ''; });
 }
 
-/* ========== INIT ========== */
+
 buildStats('stats1'); buildStats('stats2');
 buildRelationFields("rel1a", ["入力..."]);
 buildRelationFields("rel1b", ["入力..."]);
 buildRelationFields("rel1c", ["入力..."]);
 buildRelationFields("rel1d", ["Keyword 1", "Keyword 2", "Keyword 3"]);
-
 buildRelationFields("rel2a", ["入力..."]);
 buildRelationFields("rel2b", ["入力..."]);
 buildRelationFields("rel2c", ["入力..."]);
