@@ -157,7 +157,8 @@ body {
   backdrop-filter: blur(20px);
 -webkit-backdrop-filter: blur(20px);
   border-right: 1px solid rgba(255,255,255,0.08);
-  padding: 24px; display: flex; flex-direction: column; gap: 10px;
+  padding: 24px 28px; display: flex; flex-direction: column; gap: 10px;
+  width: 320px; /* 好きなサイズに */
 }
 .char-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.08); }
 
@@ -172,6 +173,12 @@ body {
 
 .char-panel:last-child .field-input {
   text-align: right;
+}
+
+  .panel-inner {
+  padding: 24px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
 }
 
 /* portrait */
