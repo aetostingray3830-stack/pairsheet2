@@ -226,7 +226,7 @@ body {
   flex-shrink: 0;
   text-transform: uppercase;
 }
-.stat-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden; cursor: pointer; }
+.stat-bar-wrap { flex: 1; height: 10px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden; cursor: pointer; }
 .stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.15s; background: #7c3aed; }
 .stat-input {
   width: 26px;
@@ -466,7 +466,7 @@ body {
         </div>
         <div class="two-col">
           <div class="field-group"><div class="field-label">JOB</div><input class="field-input" placeholder="職業"></div>
-          <div class="field-group"><div class="field-label">SEX</div><input class="field-input" placeholder="性別"></div>
+          <div class="field-group"><div class="field-label">GENDER</div><input class="field-input" placeholder="性別"></div>
         </div>
         <div class="stats-section" id="stats1"></div>
         <div><div class="section-title">Physical Appearance</div><div class="trait-list" id="traits1a"></div></div>
@@ -511,7 +511,7 @@ body {
         </div>
         <div class="two-col">
           <div class="field-group"><div class="field-label">JOB</div><input class="field-input" placeholder="職業"></div>
-          <div class="field-group"><div class="field-label">SEX</div><input class="field-input" placeholder="性別"></div>
+          <div class="field-group"><div class="field-label">GENDER</div><input class="field-input" placeholder="性別"></div>
         </div>
         <div class="stats-section" id="stats2"></div>
         <div><div class="section-title">Physical Appearance</div><div class="trait-list" id="traits2a"></div></div>
@@ -569,8 +569,18 @@ function normalizeHex(color) {
 }
   
 /* ========== STATE ========== */
-const STATS = [{l:'STR',v:14},{l:'CON',v:17},{l:'POW',v:13},{l:'DEX',v:6},{l:'APP',v:18},{l:'SIZ',v:16},{l:'INT',v:13},{l:'EDU',v:17}];
-const MAX = 24;
+const STATS = [
+{ l:'体格', v:60 },
+{ l:'運動神経', v:55 },
+{ l:'知性', v:70 },
+{ l:'外見', v:80 },
+{ l:'社交性', v:65 },
+{ l:'メンタル', v:50 },
+{ l:'色気', v:75 },
+{ l:'人気', v:85 }
+];
+
+const MAX = 100;
 let statColor = '#888';
 let selectedItem = null; // currently selected float-txt or float-img-wrap
 
