@@ -547,36 +547,51 @@ body {
         </div>
       </div>
 
-      <!-- RIGHT -->
-      <div class="char-panel">
-        <div class="portrait-row" style="flex-direction:row-reverse">
-          <div class="portrait-box" id="p2box">
-            <div class="upload-hint">クリックして<br>画像追加</div>
-            <img id="p2img" src="" alt="" style="display:none">
-            <input type="file" accept="image/*" onchange="loadPortrait(this,'p2img','p2box')">
-            <input type="color" class="portrait-color-btn" value="#888888" title="背景色" onchange="setPortraitColor('p2box',this.value)" onclick="event.stopPropagation()">
-          </div>
-          <div class="tags-col" id="tags2">
-            <div class="tag-wrap"><input class="tag-input" value="HAIR"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
-            <div class="tag-wrap"><input class="tag-input" value="EYE"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
-            <div class="tag-wrap"><input class="tag-input" value="ETC"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
-          </div>
-        </div>
+     <!-- RIGHT -->
+<div class="char-panel">
+  <div class="portrait-row" style="flex-direction:row-reverse">
+    <div class="portrait-box" id="p2box">
+      <div class="upload-hint">クリックして<br>画像追加</div>
+      <img id="p2img" src="" alt="" style="display:none">
+      <input type="file" accept="image/*" onchange="loadPortrait(this,'p2img','p2box')">
+      <input type="color" class="portrait-color-btn" value="#888888" title="背景色" onchange="setPortraitColor('p2box',this.value)" onclick="event.stopPropagation()">
+    </div>
+    <div class="tags-col" id="tags2">
+      <div class="tag-wrap"><input class="tag-input" value="HAIR"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+      <div class="tag-wrap"><input class="tag-input" value="EYE"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+      <div class="tag-wrap"><input class="tag-input" value="ETC"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+    </div>
+  </div>
 
-        <div class="two-col">
-          <div class="field-group"><div class="field-label">AGE</div><input class="field-input" type="text" placeholder="--"></div>
-          <div class="field-group"><div class="field-label">NAME</div><input id="charName2" class="field-input" placeholder="名前" style="text-align:right" oninput="syncName(2,this.value)"></div>
-        </div>
-        <div class="two-col">
-          <div class="field-group"><div class="field-label">JOB</div><input class="field-input" placeholder="職業"></div>
-          <div class="field-group"><div class="field-label">GENDER</div><input class="field-input" placeholder="性別"></div>
-        </div>
-        <div class="stats-section" id="stats2"></div>
-        <div><div class="section-title">Relationship</div><div class="relation-list" id="rel2a"></div></div>
-<div><div class="section-title">First Impression</div><div class="relation-list" id="rel2b"></div></div>
-<div><div class="section-title">Current Distance</div><div class="relation-list" id="rel2c"></div></div>
-<div><div class="section-title">Keywords</div><div class="relation-list" id="rel2d"></div></div>
-      </div>
+  <div class="two-col">
+    <div class="field-group">
+      <div class="field-label">AGE</div>
+      <input class="field-input" type="text" placeholder="--">
+    </div>
+    <div class="field-group">
+      <div class="field-label">NAME</div>
+      <input id="charName2" class="field-input" placeholder="名前" oninput="syncName(2,this.value)">
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="field-group">
+      <div class="field-label">JOB</div>
+      <input class="field-input" placeholder="職業">
+    </div>
+    <div class="field-group">
+      <div class="field-label">GENDER</div>
+      <input class="field-input" placeholder="性別">
+    </div>
+  </div>
+
+  <div class="stats-section" id="stats2"></div>
+
+  <div><div class="section-title">Relationship</div><div class="relation-list" id="rel2a"></div></div>
+  <div><div class="section-title">First Impression</div><div class="relation-list" id="rel2b"></div></div>
+  <div><div class="section-title">Current Distance</div><div class="relation-list" id="rel2c"></div></div>
+  <div><div class="section-title">Keywords</div><div class="relation-list" id="rel2d"></div></div>
+</div>
 
     </div>
   </div>
