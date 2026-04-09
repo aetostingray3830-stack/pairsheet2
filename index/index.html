@@ -1,0 +1,972 @@
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ペアキャラクターシート</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Zen+Antique&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Kaisei+Decol&family=Rampart+One&family=Reggae+One&family=BIZ+UDMincho&family=DotGothic16&family=Gothic+A1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #eee;
+  min-height: 100vh;
+  background: #1a0a2e;
+  position: relative;
+  overflow-x: hidden;
+}
+
+  
+  :root {
+  --panel-text-color: rgba(255,255,255,0.9);
+  --panel-label-color: rgba(255,255,255,0.45);
+  --panel-title-color: rgba(255,255,255,0.7);
+  --panel-bullet-color: rgba(255,255,255,0.3);
+}
+
+  .header-name-input,
+.pair-name-display input,
+.field-input,
+.stat-input,
+.trait-input,
+.tag-input {
+  color: var(--panel-text-color);
+}
+
+  
+
+/* ── 背景レイヤー ── */
+#bgLayer {
+  position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(135deg, #1a0a2e 0%, #0a1a2e 50%, #0e0a1e 100%);
+  background-size: cover; background-position: center;
+  transition: background 0.4s;
+}
+
+/* ── ツールバー ── */
+.control-panel {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(15,10,35,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  padding: 8px 14px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.control-panel h1 { font-family: 'Zen Antique', serif; font-size: 16px; color: rgba(255,255,255,0.85); margin-right: 4px; }
+.btn { padding: 6px 14px; border: none; border-radius: 6px; font-family: 'Noto Sans JP', sans-serif; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: 700; }
+.btn-export { background: rgba(255,255,255,0.18); color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.25); }
+.btn-export:hover { transform: translateY(-1px); background: rgba(255,255,255,0.25); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15); }
+.btn-secondary:hover { background: rgba(255,255,255,0.15); }
+.toolbar-group { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.06); padding: 4px 9px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+.toolbar-group label { font-size: 10px; color: rgba(255,255,255,0.45); white-space: nowrap; }
+.tc { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; flex-shrink: 0; }
+.tc.active { border-color: white; }
+.tc-inp { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; padding: 0; }
+.sep { color: rgba(255,255,255,0.2); font-size: 16px; }
+
+/* text tool */
+#textToolGroup input[type=color] { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; padding: 0; }
+#textToolGroup input[type=range] { width: 60px; accent-color: rgba(255,255,255,0.7); }
+#textToolGroup select { background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; font-size: 10px; padding: 2px 3px; }
+#textToolGroup span { font-size: 10px; color: #ddd; min-width: 18px; text-align: center; }
+
+/* ── canvas wrap ── */
+.canvas-wrap {
+  position: relative; z-index: 1;
+  padding: 24px;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: calc(100vh - 54px);
+}
+
+/* ── SHEET ── */
+#sheet {
+  width: 1000px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* header */
+.sheet-header {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  display: grid; grid-template-columns: 200px 1fr 200px;
+  align-items: center; padding: 10px 16px; min-height: 60px;
+}
+.header-name { display: flex; flex-direction: column; }
+.header-name.right { text-align: right; }
+.pair-name-display input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  color: var(--panel-text-color);
+  font-family: 'Zen Antique', serif;
+  font-size: 22px;
+  text-align: center;
+  width: 100%;
+  outline: none;
+  letter-spacing: 3px;
+}
+.pair-name-display input:focus { border-bottom-color: rgba(255,255,255,0.8); }
+.header-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  color: var(--panel-text-color);
+  font-family: 'Zen Antique', serif;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+}
+.header-name-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
+
+/* body */
+.sheet-body { display: grid; grid-template-columns: 220px 1fr 220px; min-height: 700px; }
+
+/* char panel */
+.char-panel {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  padding: 12px; display: flex; flex-direction: column; gap: 10px;
+}
+.char-panel:last-child { border-right: none; border-left: 1px solid rgba(255,255,255,0.08); }
+
+  .char-panel:last-child .field-label {
+  text-align: right;
+}
+
+  /* 右側パネルは全部右寄せ */
+.char-panel:last-child .field-group {
+  text-align: right;
+}
+
+.char-panel:last-child .field-input {
+  text-align: right;
+}
+
+/* portrait */
+.portrait-row { display: flex; gap: 8px; align-items: flex-start; }
+.portrait-box {
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px; flex-shrink: 0; position: relative; overflow: hidden; cursor: pointer;
+  background-repeat: no-repeat; background-position: center; background-size: contain;
+}
+.portrait-box img { display: none; }
+.portrait-box .upload-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; line-height: 1.5; }
+.portrait-box input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.portrait-color-btn { position: absolute; bottom: 4px; right: 4px; width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.5); cursor: pointer; padding: 0; opacity: 0; transition: opacity 0.15s; z-index: 3; }
+.portrait-box:hover .portrait-color-btn { opacity: 1; }
+
+/* tags */
+.tags-col { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.tag-wrap { position: relative; width: 100%; }
+.tag-input {
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  color: var(--panel-text-color); font-size: 10px; padding: 3px 20px 3px 6px;
+  border-radius: 4px; border: 1px solid rgba(255,255,255,0.12); outline: none;
+  width: 100%; font-family: 'Noto Sans JP', sans-serif; text-align: center;
+}
+.tag-color-btn { position: absolute; right: 3px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; padding: 0; opacity: 0; transition: opacity 0.15s; }
+.tag-wrap:hover .tag-color-btn { opacity: 1; }
+
+/* icon row */
+.icon-row { display: flex; gap: 5px; align-items: center; }
+.icon-box-input {
+  width: 36px; height: 26px;
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px; outline: none; color: rgba(255,255,255,0.9);
+  font-size: 9px; font-family: 'Noto Sans JP', sans-serif; text-align: center; flex-shrink: 0; padding: 2px;
+}
+.icon-box-input:focus { border-color: rgba(255,255,255,0.5); }
+
+/* fields */
+.field-group { display: flex; flex-direction: column; gap: 2px; }
+.field-label {
+  font-size: 9px;
+  color: var(--panel-label-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.field-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  font-size: 11px;
+  color: var(--panel-text-color);
+  outline: none;
+  width: 100%;
+  padding: 2px 0;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.field-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* stats */
+.stats-section { margin-top: 4px; }
+.stat-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.stat-label {
+  font-size: 9px;
+  color: var(--panel-label-color);
+  width: 26px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.stat-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden; cursor: pointer; }
+.stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.15s; background: #7c3aed; }
+.stat-input {
+  width: 26px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  font-size: 9px;
+  text-align: center;
+  color: var(--panel-text-color);
+  outline: none;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+/* traits */
+.section-title {
+  font-family: 'Zen Antique', serif;
+  font-size: 13px;
+  color: var(--panel-title-color);
+  margin-bottom: 4px;
+}
+.trait-list { display: flex; flex-direction: column; gap: 4px; }
+.trait-item { display: flex; align-items: center; gap: 4px; }
+.trait-bullet {
+  font-size: 10px;
+  color: var(--panel-bullet-color);
+  flex-shrink: 0;
+}
+.trait-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  font-size: 11px;
+  color: var(--panel-text-color);
+  outline: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  padding: 2px 0;
+}
+  .trait-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
+
+/* ── CENTER PANEL ── */
+.center-panel {
+  background: rgba(45,10,78,0.5);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; min-height: 600px;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.center-label {
+  color: rgba(255,255,255,0.12); font-family: 'Zen Antique', serif;
+  font-size: 20px; letter-spacing: 4px; text-align: center;
+  pointer-events: none; user-select: none;
+}
+.center-bg-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0; display: none;
+}
+.center-panel input[type=file].center-file-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; }
+
+/* color pick row */
+.color-pick-row {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 5px; z-index: 20;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
+  padding: 5px 10px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.color-swatch { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.color-swatch.active { border-color: white; }
+.bg-custom { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; padding: 0; }
+
+/* ── FLOAT LAYER (textboxes + images) ── */
+#floatLayer { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+
+/* floating textbox */
+.float-txt {
+  position: absolute; min-width: 80px; min-height: 28px;
+  background: transparent; border: none; border-radius: 4px;
+  cursor: move; z-index: 12; user-select: none;
+}
+.float-txt.selected { outline: 1px dashed rgba(255,255,255,0.6); }
+.free-text {
+  width: 100%; min-height: 28px; color: white; font-size: 13px;
+  font-family: 'Noto Sans JP', sans-serif; line-height: 1.5;
+  padding: 5px 22px 5px 7px; outline: none;
+  white-space: pre-wrap; word-break: break-word; cursor: text; user-select: text;
+}
+.float-del {
+  position: absolute; top: 2px; right: 3px;
+  background: rgba(255,60,60,0.75); color: white; border: none;
+  border-radius: 3px; font-size: 9px; cursor: pointer; padding: 1px 4px;
+  opacity: 0; transition: opacity 0.15s; line-height: 1.4; z-index: 2;
+}
+.float-item:hover .float-del, .float-item.selected .float-del { opacity: 1; }
+.float-txt:hover .float-del, .float-txt.selected .float-del { opacity: 1; }
+
+/* floating image */
+.float-img-wrap {
+  position: absolute; cursor: move; z-index: 11; user-select: none;
+  border: none; border-radius: 2px;
+}
+.float-img-wrap.selected { outline: 1px dashed rgba(255,255,255,0.6); }
+.float-img-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 2px; pointer-events: none; }
+.float-img-wrap .float-del { top: 2px; right: 3px; }
+.float-img-wrap:hover .float-del, .float-img-wrap.selected .float-del { opacity: 1; }
+
+/* resize handle */
+.resize-handle {
+  position: absolute; width: 14px; height: 14px; border-radius: 50%;
+  background: rgba(255,255,255,0.7); cursor: se-resize;
+  bottom: -5px; right: -5px; opacity: 0; transition: opacity 0.15s; z-index: 3;
+}
+.float-img-wrap:hover .resize-handle,
+.float-img-wrap.selected .resize-handle { opacity: 1; }
+.float-txt-resize { position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; cursor: se-resize; opacity: 0.35; }
+
+/* export overlay */
+.export-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+.export-overlay.show { display: flex; }
+.export-spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.15); border-top-color: rgba(255,255,255,0.8); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.export-overlay p { color: #c084fc; font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div id="bgLayer"></div>
+
+<div class="control-panel">
+  <h1>⚙ ペアシートエディタ</h1>
+  <button class="btn btn-export" onclick="exportPNG()">📥 PNG書き出し</button>
+  <button class="btn btn-secondary" onclick="resetSheet()">🔄 リセット</button>
+  <button class="btn btn-secondary" onclick="addTextBox()">✏️ テキスト</button>
+  <button class="btn btn-secondary" onclick="triggerImgAdd()">🖼️ 画像配置</button>
+  <input type="file" id="floatImgInput" accept="image/*" style="display:none" onchange="addFloatImage(this)">
+  <span class="sep">|</span>
+
+  <!-- text style -->
+  <div class="toolbar-group" id="textToolGroup">
+    <label>文字</label>
+    <input type="color" id="txtColor" value="#ffffff" oninput="applyTxtStyle()">
+    <input type="range" id="txtSize" min="8" max="72" value="13" oninput="applyTxtStyle()">
+    <span id="txtSizeVal">13</span>
+    <select id="txtAlign" onchange="applyTxtStyle()">
+      <option value="left">左</option><option value="center">中</option><option value="right">右</option>
+    </select>
+    <select id="txtWeight" onchange="applyTxtStyle()">
+      <option value="400">標準</option><option value="700">太字</option>
+    </select>
+    <select id="txtMode" onchange="applyTxtStyle()">
+      <option value="horizontal">横</option><option value="vertical">縦</option>
+    </select>
+    <label>フォント</label>
+<select id="txtFont" onchange="applyTxtStyle()">
+  <option value="'Noto Sans JP', sans-serif">Noto Sans</option>
+  <option value="'Dela Gothic One', cursive">Dela Gothic One</option>
+  <option value="'Kaisei Decol', serif">Kaisei Decol</option>
+  <option value="'Rampart One', cursive">Rampart One</option>
+  <option value="'Reggae One', cursive">Reggae One</option>
+  <option value="'BIZ UDMincho', serif">BIZ UDMincho</option>
+  <option value="'DotGothic16', sans-serif">DotGothic16</option>
+  <option value="'Gothic A1', sans-serif">Gothic A1</option>
+</select>
+  </div>
+
+  <span class="sep">|</span>
+
+<div class="toolbar-group">
+  <label>入力文字</label>
+  <input type="color" value="#ffffff" oninput="document.documentElement.style.setProperty('--panel-text-color', this.value)">
+</div>
+  
+  <!-- page background -->
+  <div class="toolbar-group">
+    <label>背景</label>
+    <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="document.getElementById('bgImgInput').click()">ページ画像</button>
+    <input type="file" id="bgImgInput" accept="image/*" style="display:none" onchange="setBgImage(this)">
+    <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="document.getElementById('centerBgInput').click()">中央画像</button>
+    <input type="file" id="centerBgInput" accept="image/*" style="display:none" onchange="loadCenter(this)">
+    <input type="color" class="tc-inp" value="#1a0a2e" onchange="setBgSolid(this.value)" title="単色背景">
+    <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="clearBg()">クリア</button>
+  </div>
+
+  <!-- stat color -->
+  <div class="toolbar-group" id="statGroup">
+    <label>STATバー</label>
+    <div class="tc active" style="background:#888" onclick="setStatColor('#888',this)"></div>
+    <div class="tc" style="background:#e03a6a" onclick="setStatColor('#e03a6a',this)"></div>
+    <div class="tc" style="background:#2196f3" onclick="setStatColor('#2196f3',this)"></div>
+    <div class="tc" style="background:#26a06b" onclick="setStatColor('#26a06b',this)"></div>
+    <div class="tc" style="background:#f59e0b" onclick="setStatColor('#f59e0b',this)"></div>
+    <div class="tc" style="background:#aaa" onclick="setStatColor('#aaa',this)"></div>
+    <input type="color" class="tc-inp" value="#7c3aed" onchange="setStatColor(this.value,null)">
+  </div>
+
+  
+</div>
+
+<div class="canvas-wrap">
+  <div id="sheet">
+
+    <!-- HEADER -->
+    <div class="sheet-header">
+      <div class="header-name">
+        <input id="headerName1" class="header-name-input" type="text" placeholder="CHARACTER NAME" value="CHARACTER NAME" oninput="syncName(1,this.value)">
+      </div>
+      <div class="pair-name-display" style="text-align:center">
+        <input type="text" placeholder="PAIR NAME" value="PAIR NAME">
+      </div>
+      <div class="header-name right">
+        <input id="headerName2" class="header-name-input" type="text" placeholder="CHARACTER NAME" value="CHARACTER NAME" style="text-align:right" oninput="syncName(2,this.value)">
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="sheet-body">
+
+      <!-- LEFT -->
+      <div class="char-panel">
+        <div class="portrait-row">
+          <div class="portrait-box" id="p1box">
+            <div class="upload-hint">クリックして<br>画像追加</div>
+            <img id="p1img" src="" alt="" style="display:none">
+            <input type="file" accept="image/*" onchange="loadPortrait(this,'p1img','p1box')">
+            <input type="color" class="portrait-color-btn" value="#888888" title="背景色" onchange="setPortraitColor('p1box',this.value)" onclick="event.stopPropagation()">
+          </div>
+          <div class="tags-col" id="tags1">
+            <div class="tag-wrap"><input class="tag-input" value="HAIR"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+            <div class="tag-wrap"><input class="tag-input" value="EYE"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+            <div class="tag-wrap"><input class="tag-input" value="ETC"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field-group"><div class="field-label">NAME</div><input id="charName1" class="field-input" placeholder="名前" oninput="syncName(1,this.value)"></div>
+          <div class="field-group"><div class="field-label">AGE</div><input class="field-input" type="text" placeholder="--"></div>
+        </div>
+        <div class="two-col">
+          <div class="field-group"><div class="field-label">JOB</div><input class="field-input" placeholder="職業"></div>
+          <div class="field-group"><div class="field-label">SEX</div><input class="field-input" placeholder="性別"></div>
+        </div>
+        <div class="stats-section" id="stats1"></div>
+        <div><div class="section-title">Physical Appearance</div><div class="trait-list" id="traits1a"></div></div>
+        <div><div class="section-title">Other Features</div><div class="trait-list" id="traits1b"></div></div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="center-panel" id="centerPanel">
+        <div class="center-label" id="centerLabel">中央背景はツールバーの「背景画像」から追加</div>
+        <img class="center-bg-img" id="centerImg" src="" alt="">
+        <div id="floatLayer"></div>
+        <div class="color-pick-row" id="colorPickRow">
+          <div class="color-swatch active" style="background:#2d0a4e" onclick="setCenterBg('#2d0a4e',this)"></div>
+          <div class="color-swatch" style="background:#0a2d0e" onclick="setCenterBg('#0a2d0e',this)"></div>
+          <div class="color-swatch" style="background:#0a1a2d" onclick="setCenterBg('#0a1a2d',this)"></div>
+          <div class="color-swatch" style="background:#2d0a0a" onclick="setCenterBg('#2d0a0a',this)"></div>
+          <div class="color-swatch" style="background:#111" onclick="setCenterBg('#111',this)"></div>
+          <div class="color-swatch" style="background:#2d2a0a" onclick="setCenterBg('#2d2a0a',this)"></div>
+          <input type="color" class="bg-custom" title="カスタム" onchange="setCenterBg(this.value,null)">
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="char-panel">
+        <div class="portrait-row" style="flex-direction:row-reverse">
+          <div class="portrait-box" id="p2box">
+            <div class="upload-hint">クリックして<br>画像追加</div>
+            <img id="p2img" src="" alt="" style="display:none">
+            <input type="file" accept="image/*" onchange="loadPortrait(this,'p2img','p2box')">
+            <input type="color" class="portrait-color-btn" value="#888888" title="背景色" onchange="setPortraitColor('p2box',this.value)" onclick="event.stopPropagation()">
+          </div>
+          <div class="tags-col" id="tags2">
+            <div class="tag-wrap"><input class="tag-input" value="HAIR"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+            <div class="tag-wrap"><input class="tag-input" value="EYE"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+            <div class="tag-wrap"><input class="tag-input" value="ETC"><input type="color" class="tag-color-btn" value="#000000" oninput="applyTagColor(this)"></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field-group"><div class="field-label">AGE</div><input class="field-input" type="text" placeholder="--"></div>
+          <div class="field-group"><div class="field-label">NAME</div><input id="charName2" class="field-input" placeholder="名前" style="text-align:right" oninput="syncName(2,this.value)"></div>
+        </div>
+        <div class="two-col">
+          <div class="field-group"><div class="field-label">JOB</div><input class="field-input" placeholder="職業"></div>
+          <div class="field-group"><div class="field-label">SEX</div><input class="field-input" placeholder="性別"></div>
+        </div>
+        <div class="stats-section" id="stats2"></div>
+        <div><div class="section-title">Physical Appearance</div><div class="trait-list" id="traits2a"></div></div>
+        <div><div class="section-title">Other Features</div><div class="trait-list" id="traits2b"></div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="export-overlay" id="exportOverlay">
+  <div class="export-spinner"></div>
+  <p style="color:rgba(255,255,255,0.8)">書き出し中...</p>
+</div>
+
+<script>
+function updatePanelContrast(bg) {
+  const hex = normalizeHex(bg);
+  if (!hex) return;
+
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  const brightness = r * 0.299 + g * 0.587 + b * 0.114;
+  const root = document.documentElement;
+
+  if (brightness > 170) {
+    root.style.setProperty("--panel-text-color", "rgba(30,30,30,0.95)");
+    root.style.setProperty("--panel-label-color", "rgba(40,40,40,0.75)");
+    root.style.setProperty("--panel-title-color", "rgba(20,20,20,0.9)");
+    root.style.setProperty("--panel-bullet-color", "rgba(40,40,40,0.6)");
+  } else {
+    root.style.setProperty("--panel-text-color", "rgba(255,255,255,0.9)");
+    root.style.setProperty("--panel-label-color", "rgba(255,255,255,0.45)");
+    root.style.setProperty("--panel-title-color", "rgba(255,255,255,0.7)");
+    root.style.setProperty("--panel-bullet-color", "rgba(255,255,255,0.3)");
+  }
+}
+
+function normalizeHex(color) {
+  if (!color) return null;
+  if (color.startsWith("#")) {
+    if (color.length === 4) {
+      return (
+        "#" +
+        color[1] + color[1] +
+        color[2] + color[2] +
+        color[3] + color[3]
+      );
+    }
+    return color;
+  }
+  return null;
+}
+  
+/* ========== STATE ========== */
+const STATS = [{l:'STR',v:14},{l:'CON',v:17},{l:'POW',v:13},{l:'DEX',v:6},{l:'APP',v:18},{l:'SIZ',v:16},{l:'INT',v:13},{l:'EDU',v:17}];
+const MAX = 24;
+let statColor = '#888';
+let selectedItem = null; // currently selected float-txt or float-img-wrap
+
+/* ========== STATS ========== */
+function buildStats(id) {
+  const el = document.getElementById(id); el.innerHTML = '';
+  STATS.forEach(s => {
+    const d = document.createElement('div'); d.className = 'stat-row';
+    d.innerHTML = `<span class="stat-label">${s.l}</span>
+      <div class="stat-bar-wrap" onclick="clickBar(event,this)">
+        <div class="stat-bar-fill" style="width:${s.v/MAX*100}%;background:${statColor}"></div>
+      </div>
+      <input class="stat-input" type="number" min="1" max="${MAX}" value="${s.v}" oninput="syncBar(this)">`;
+    el.appendChild(d);
+  });
+}
+function syncBar(inp) {
+  const v = Math.min(MAX, Math.max(1, parseInt(inp.value)||1));
+  inp.previousElementSibling.querySelector('.stat-bar-fill').style.width = (v/MAX*100)+'%';
+}
+function clickBar(e, wrap) {
+  const r = wrap.getBoundingClientRect();
+  const v = Math.max(1, Math.min(MAX, Math.round((e.clientX-r.left)/r.width*MAX)));
+  wrap.querySelector('.stat-bar-fill').style.width = (v/MAX*100)+'%';
+  wrap.nextElementSibling.value = v;
+}
+function setStatColor(c, sw) {
+  statColor = c;
+  document.querySelectorAll('.stat-bar-fill').forEach(b => b.style.background = c);
+  if(sw) { document.querySelectorAll('#statGroup .tc').forEach(s=>s.classList.remove('active')); sw.classList.add('active'); }
+}
+
+/* ========== TAGS ========== */
+function setTagColor(bg, text, sw) {
+  document.querySelectorAll('.tag-input').forEach(t => { t.style.background=bg; t.style.color=text; });
+  if(sw) { document.querySelectorAll('#tagGroup .tc').forEach(s=>s.classList.remove('active')); sw.classList.add('active'); }
+}
+function applyTagColor(picker) {
+  const bg = picker.value;
+  const inp = picker.previousElementSibling;
+  inp.style.background = bg;
+  const r=parseInt(bg.slice(1,3),16), g=parseInt(bg.slice(3,5),16), b=parseInt(bg.slice(5,7),16);
+  inp.style.color = (r*0.299+g*0.587+b*0.114)>128 ? '#222' : '#fff';
+}
+
+/* ========== TRAITS ========== */
+function buildTraits(id, n) {
+  const el = document.getElementById(id); el.innerHTML='';
+  for(let i=0;i<n;i++) {
+    const d=document.createElement('div'); d.className='trait-item';
+    d.innerHTML='<span class="trait-bullet">・</span><input class="trait-input" placeholder="特徴を入力...">';
+    el.appendChild(d);
+  }
+}
+
+/* ========== PORTRAIT ========== */
+function loadPortrait(inp, imgId, boxId) {
+  if(!inp.files[0]) return;
+  const box=document.getElementById(boxId), url=URL.createObjectURL(inp.files[0]);
+  box.style.backgroundImage=`url('${url}')`;
+  box.style.backgroundRepeat='no-repeat'; box.style.backgroundPosition='center'; box.style.backgroundSize='contain';
+  box.querySelector('.upload-hint').style.display='none';
+}
+function setPortraitColor(boxId, color) { document.getElementById(boxId).style.backgroundColor = color; }
+
+/* ========== CENTER BG ========== */
+function loadCenter(inp) {
+  if(!inp.files[0]) return;
+  const img=document.getElementById('centerImg');
+  img.src=URL.createObjectURL(inp.files[0]); img.style.display='block';
+  document.getElementById('centerLabel').style.display='none';
+}
+function setCenterBg(c, sw) {
+  const panel=document.getElementById('centerPanel');
+  panel.style.background = c;
+  if(sw){ document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active')); sw.classList.add('active'); }
+}
+
+/* ========== PAGE BACKGROUND ========== */
+function setBgImage(inp) {
+  if(!inp.files[0]) return;
+  const url = URL.createObjectURL(inp.files[0]);
+  const bg = document.getElementById('bgLayer');
+  bg.style.backgroundImage = `url('${url}')`;
+  bg.style.backgroundSize = 'cover';
+  bg.style.backgroundPosition = 'center';
+  bg.style.backgroundColor = '';
+}
+function setBgSolid(color) {
+  const bg = document.getElementById("bgLayer");
+  bg.style.background = color;
+  bg.style.backgroundImage = "none";
+  updatePanelContrast(color);
+}
+function clearBg() {
+  const bg = document.getElementById("bgLayer");
+  bg.style.background = "linear-gradient(135deg, #1a0a2e 0%, #0a1a2e 50%, #0e0a1e 100%)";
+  bg.style.backgroundImage = "none";
+
+  document.documentElement.style.setProperty("--panel-text-color", "rgba(255,255,255,0.9)");
+  document.documentElement.style.setProperty("--panel-label-color", "rgba(255,255,255,0.45)");
+  document.documentElement.style.setProperty("--panel-title-color", "rgba(255,255,255,0.7)");
+  document.documentElement.style.setProperty("--panel-bullet-color", "rgba(255,255,255,0.3)");
+}
+
+/* ========== SYNC NAME ========== */
+function syncName(n, val) {
+  const header=document.getElementById('headerName'+n), charField=document.getElementById('charName'+n);
+  if(document.activeElement===header) charField.value=val;
+  else header.value=val;
+}
+
+/* ========== SELECTION ========== */
+function selectItem(el) {
+  if(selectedItem) selectedItem.classList.remove('selected');
+  selectedItem = el;
+  if(el) el.classList.add('selected');
+}
+
+document.addEventListener('mousedown', e => {
+  if(!selectedItem) return;
+  if(selectedItem.contains(e.target)) return;
+  if(document.querySelector('.control-panel').contains(e.target)) return;
+  selectItem(null);
+});
+
+/* ========== FLOATING TEXTBOX ========== */
+function addTextBox() {
+  const layer = document.getElementById('floatLayer');
+  layer.style.pointerEvents = 'auto';
+
+  const box = document.createElement('div');
+  box.className = 'float-txt';
+  box.style.left = '40px';
+  box.style.top = (40 + layer.querySelectorAll('.float-txt').length * 44) + 'px';
+  box.style.width = '160px';
+
+  box.innerHTML = `
+    <div class="free-text" contenteditable="true">テキストを入力…</div>
+    <button class="float-del" onclick="removeFloat(this.parentElement)">✕</button>
+    <svg class="float-txt-resize" viewBox="0 0 10 10">
+      <path d="M2 10 L10 2 M6 10 L10 6" stroke="white" stroke-width="1.5"/>
+    </svg>
+  `;
+
+  makeDraggable(box, true);
+  makeResizableTxt(box);
+
+  box.addEventListener('mousedown', e => {
+    if (
+      e.target.tagName !== 'BUTTON' &&
+      e.target.tagName !== 'path' &&
+      e.target.tagName !== 'svg'
+    ) {
+      selectItem(box);
+    }
+  });
+
+  layer.appendChild(box);
+  selectItem(box);
+
+  const text = box.querySelector('.free-text');
+  text.style.fontFamily = document.getElementById("txtFont").value;
+  text.focus();
+
+  document.execCommand?.('selectAll', false, null);
+}
+
+/* ========== FLOATING IMAGE ========== */
+function triggerImgAdd() { document.getElementById('floatImgInput').click(); }
+
+function addFloatImage(inp) {
+  if(!inp.files[0]) return;
+  const url = URL.createObjectURL(inp.files[0]);
+  const layer = document.getElementById('floatLayer');
+  layer.style.pointerEvents = 'auto';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'float-img-wrap';
+  wrap.style.left = '60px';
+  wrap.style.top = (60 + layer.querySelectorAll('.float-img-wrap').length * 20) + 'px';
+
+  const img = document.createElement('img');
+  img.src = url;
+  // Set wrap size from natural image ratio once loaded
+  img.onload = () => {
+    const ratio = img.naturalWidth / img.naturalHeight;
+    const initW = 200;
+    wrap.style.width = initW + 'px';
+    wrap.style.height = Math.round(initW / ratio) + 'px';
+    wrap._ratio = ratio;
+  };
+
+  const del = document.createElement('button');
+  del.className = 'float-del';
+  del.textContent = '✕';
+  del.onclick = () => removeFloat(wrap);
+
+  const handle = document.createElement('div');
+  handle.className = 'resize-handle';
+
+  wrap.appendChild(img);
+  wrap.appendChild(del);
+  wrap.appendChild(handle);
+
+  makeDraggable(wrap, false);
+  makeResizableImg(wrap, handle);
+  wrap.addEventListener('mousedown', e => {
+    if(e.target.tagName!=='BUTTON'&&!e.target.classList.contains('resize-handle')) selectItem(wrap);
+  });
+
+  layer.appendChild(wrap);
+  selectItem(wrap);
+  inp.value = '';
+}
+
+function removeFloat(el) {
+  if(selectedItem===el) selectItem(null);
+  el.remove();
+  const layer=document.getElementById('floatLayer');
+  if(!layer.querySelector('.float-txt, .float-img-wrap')) layer.style.pointerEvents='none';
+}
+
+/* ========== DRAG ========== */
+function makeDraggable(el, skipFreeText) {
+  let ox,oy,sx,sy,dragging=false;
+  el.addEventListener('mousedown', e => {
+    if(skipFreeText && e.target.classList.contains('free-text')) return;
+    if(e.target.tagName==='BUTTON') return;
+    if(e.target.classList.contains('resize-handle')) return;
+    if(e.target.tagName==='path'||e.target.tagName==='svg') return;
+    e.preventDefault();
+    dragging=true; sx=el.offsetLeft; sy=el.offsetTop; ox=e.clientX; oy=e.clientY;
+  });
+  document.addEventListener('mousemove', e => { if(!dragging) return; el.style.left=(sx+e.clientX-ox)+'px'; el.style.top=(sy+e.clientY-oy)+'px'; });
+  document.addEventListener('mouseup', () => { dragging=false; });
+}
+
+/* ========== RESIZE ========== */
+function makeResizableTxt(el) {
+  const handle=el.querySelector('.float-txt-resize');
+  let resizing=false, sx,sy,sw,sh;
+  handle.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); resizing=true; sx=e.clientX; sy=e.clientY; sw=el.offsetWidth; sh=el.offsetHeight; });
+  document.addEventListener('mousemove', e => { if(!resizing) return; el.style.width=Math.max(60,sw+e.clientX-sx)+'px'; el.style.height=Math.max(28,sh+e.clientY-sy)+'px'; });
+  document.addEventListener('mouseup', ()=>{ resizing=false; });
+}
+
+function makeResizableImg(el, handle) {
+  let resizing=false, sx,sy,sw,sh,ratio;
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault(); e.stopPropagation();
+    resizing=true; sx=e.clientX; sy=e.clientY; sw=el.offsetWidth; sh=el.offsetHeight;
+    ratio = el._ratio || (sw/sh);
+  });
+  document.addEventListener('mousemove', e => {
+    if(!resizing) return;
+    const nw = Math.max(40, sw + e.clientX - sx);
+    el.style.width = nw + 'px';
+    el.style.height = Math.round(nw / ratio) + 'px';
+  });
+  document.addEventListener('mouseup', ()=>{ resizing=false; });
+}
+
+/* ========== TEXT STYLE ========== */
+function applyTxtStyle() {
+  if (!selectedItem || !selectedItem.classList.contains("float-txt")) return;
+
+  const text = selectedItem.querySelector(".free-text");
+  const color = document.getElementById("txtColor").value;
+  const size = document.getElementById("txtSize").value;
+  const align = document.getElementById("txtAlign").value;
+  const weight = document.getElementById("txtWeight").value;
+  const mode = document.getElementById("txtMode").value;
+  const font = document.getElementById("txtFont").value;
+
+  text.style.color = color;
+  text.style.fontSize = size + "px";
+  text.style.textAlign = align;
+  text.style.fontWeight = weight;
+  text.style.fontFamily = font;
+
+  if (mode === "vertical") {
+    text.style.writingMode = "vertical-rl";
+    text.style.textOrientation = "upright";
+  } else {
+    text.style.writingMode = "horizontal-tb";
+    text.style.textOrientation = "mixed";
+  }
+
+  document.getElementById("txtSizeVal").textContent = size;
+}
+
+function rgbToHex(str) {
+  if(!str||str.startsWith('#')) return str||'#ffffff';
+  const m=str.match(/\d+/g); if(!m) return '#ffffff';
+  return '#'+m.slice(0,3).map(x=>parseInt(x).toString(16).padStart(2,'0')).join('');
+}
+
+/* ========== RESET ========== */
+function resetSheet() { if(confirm('リセットしますか？')) location.reload(); }
+
+/* ========== EXPORT ========== */
+async function exportPNG() {
+  const ov=document.getElementById('exportOverlay'); ov.classList.add('show');
+  await document.fonts.ready;
+
+  // hide UI-only elements
+  document.getElementById('colorPickRow').style.display='none';
+  if(selectedItem) selectedItem.classList.remove('selected');
+  document.querySelectorAll('.float-del').forEach(b=>b.style.opacity='0');
+  document.querySelectorAll('.float-txt-resize').forEach(b=>b.style.opacity='0');
+  document.querySelectorAll('.resize-handle').forEach(b=>b.style.opacity='0');
+  document.querySelectorAll('input[type=file]').forEach(i=>i.style.display='none');  document.querySelectorAll('.portrait-color-btn').forEach(b=>b.style.display='none');
+  document.querySelectorAll('.tag-color-btn').forEach(b=>b.style.display='none');
+
+  // replace inputs with spans for html2canvas
+  // snap float-img-wrap size to actual image rendered size
+  const snapData = [];
+  document.querySelectorAll('.float-img-wrap').forEach(wrap => {
+    const img = wrap.querySelector('img');
+    const ratio = wrap._ratio || (img.naturalWidth / img.naturalHeight);
+    const w = wrap.offsetWidth;
+    const h = Math.round(w / ratio);
+    const prevH = wrap.style.height;
+    wrap.style.height = h + 'px';
+    snapData.push({ wrap, prevH });
+  });
+
+  const replaced = replaceInputsForExport();
+  await new Promise(r=>setTimeout(r,160));
+
+  try {
+    const sheet = document.getElementById('sheet');
+    const bgLayer = document.getElementById('bgLayer');
+
+    // Capture sheet (transparent bg)
+    const sheetCanvas = await html2canvas(sheet, {scale:2, useCORS:true, allowTaint:true, backgroundColor:null, logging:false});
+
+    // Capture background layer at same size
+    const sheetRect = sheet.getBoundingClientRect();
+    const bgCanvas = await html2canvas(bgLayer, {
+      scale:2, useCORS:true, allowTaint:true, backgroundColor:'#1a0a2e', logging:false,
+      x: sheetRect.left + window.scrollX,
+      y: sheetRect.top + window.scrollY,
+      width: sheetRect.width,
+      height: sheetRect.height,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight,
+    });
+
+    // Composite: bg first, then sheet on top
+    const final = document.createElement('canvas');
+    final.width = sheetCanvas.width;
+    final.height = sheetCanvas.height;
+    const ctx = final.getContext('2d');
+    ctx.drawImage(bgCanvas, 0, 0, final.width, final.height);
+    ctx.drawImage(sheetCanvas, 0, 0);
+
+    const a=document.createElement('a'); a.download='pair_sheet.png'; a.href=final.toDataURL('image/png'); a.click();
+  } catch(e){ alert('書き出しに失敗しました: '+e.message); }
+
+  restoreInputsAfterExport(replaced);
+  snapData.forEach(({wrap, prevH}) => { wrap.style.height = prevH; });
+  document.getElementById('colorPickRow').style.display='flex';
+  document.querySelectorAll('.float-del').forEach(b=>b.style.opacity='');
+  document.querySelectorAll('.float-txt-resize').forEach(b=>b.style.opacity='');
+  document.querySelectorAll('.resize-handle').forEach(b=>b.style.opacity='');
+  document.querySelectorAll('input[type=file]').forEach(i=>i.style.display='');
+  document.querySelectorAll('.portrait-color-btn').forEach(b=>b.style.display='');
+  document.querySelectorAll('.tag-color-btn').forEach(b=>b.style.display='');
+  ov.classList.remove('show');
+}
+
+function replaceInputsForExport() {
+  const targets=document.querySelectorAll('.tag-input,.field-input,.trait-input,.stat-input,.header-name-input,.pair-name-display input,.icon-box-input');
+  const replaced=[];
+  targets.forEach(input=>{
+    const span=document.createElement('span');
+    const cs=getComputedStyle(input);
+    span.textContent=input.value||input.placeholder||'';
+    span.style.cssText=`display:inline-block;width:${cs.width};min-height:${cs.height};font:${cs.font};color:${cs.color};background:${cs.backgroundColor};border-bottom:${cs.borderBottom};padding:${cs.padding};line-height:${cs.lineHeight};letter-spacing:${cs.letterSpacing};text-align:${cs.textAlign};white-space:pre-wrap;vertical-align:middle;box-sizing:border-box;border-radius:${cs.borderRadius};`;
+    if(input.classList.contains('header-name-input')||input.closest('.pair-name-display')) span.style.width='100%';
+    input.style.display='none';
+    input.parentNode.insertBefore(span,input.nextSibling);
+    replaced.push({input,span});
+  });
+  return replaced;
+}
+function restoreInputsAfterExport(replaced) {
+  replaced.forEach(({input,span})=>{ span.remove(); input.style.display=''; });
+}
+
+/* ========== INIT ========== */
+buildStats('stats1'); buildStats('stats2');
+buildTraits('traits1a',3); buildTraits('traits1b',3);
+buildTraits('traits2a',3); buildTraits('traits2b',3);
+</script>
+</body>
+</html>
