@@ -350,8 +350,13 @@ body {
   pointer-events: none; user-select: none;
 }
 .center-bg-img {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; z-index: 0; display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 .center-panel input[type=file].center-file-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; }
 
@@ -548,7 +553,7 @@ body {
       <!-- CENTER -->
       <div class="center-panel" id="centerPanel">
         <div class="center-label" id="centerLabel">中央背景はツールバーの「背景画像」から追加</div>
-        <img class="center-bg-img" id="centerImg" src="" alt="">
+        <div class="center-bg-img" id="centerImg"></div>
         <div id="floatLayer"></div>
         <div class="color-pick-row" id="colorPickRow">
           <div class="color-swatch active" style="background:#2d0a4e" onclick="setCenterBg('#2d0a4e',this)"></div>
@@ -717,10 +722,14 @@ function setPortraitColor(boxId, color) { document.getElementById(boxId).style.b
 
 /* ========== CENTER BG ========== */
 function loadCenter(inp) {
-  if(!inp.files[0]) return;
-  const img=document.getElementById('centerImg');
-  img.src=URL.createObjectURL(inp.files[0]); img.style.display='block';
-  document.getElementById('centerLabel').style.display='none';
+  if (!inp.files[0]) return;
+
+  const center = document.getElementById('centerImg');
+  const url = URL.createObjectURL(inp.files[0]);
+
+  center.style.backgroundImage = `url('${url}')`;
+  center.style.display = 'block';
+  document.getElementById('centerLabel').style.display = 'none';
 }
 function setCenterBg(c, sw) {
   const panel=document.getElementById('centerPanel');
