@@ -109,9 +109,9 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(25px);
+  background: rgba(255,255,255,0.12);
   pointer-events: none;
+  z-index: 0;
 }
 
 /* header */
@@ -150,11 +150,18 @@ body {
 .header-name-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
 
 /* body */
+.sheet-header,
+.sheet-body {
+  position: relative;
+  z-index: 1;
+}
+
 .sheet-body {
   display: grid;
   grid-template-columns: 280px 1fr 280px;
   min-height: 700px;
 }
+
 /* char panel */
 .char-panel {
   background: transparent;
@@ -179,14 +186,6 @@ body {
 
 .char-panel:last-child .field-input {
   text-align: right;
-}
-
- .panel-inner {
-  padding: 20px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
 }
 
 /* portrait */
