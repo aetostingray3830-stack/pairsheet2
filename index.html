@@ -1052,7 +1052,7 @@ function replaceInputsForExport() {
     const span = document.createElement('span');
     const cs = getComputedStyle(input);
 
-    span.textContent = input.value || input.placeholder || '';
+    span.textContent = input.value || '\u200B';
     span.style.cssText = `
       display:inline-block;
       width:${cs.width};
