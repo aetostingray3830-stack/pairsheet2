@@ -1042,18 +1042,50 @@ async function exportPNG() {
 }
 
 function replaceInputsForExport() {
-  const targets=document.querySelectorAll('.tag-input,.field-input,.trait-input,.stat-input,.header-name-input,.pair-name-display input,.icon-box-input');
-  const replaced=[];
-  targets.forEach(input=>{
-    const span=document.createElement('span');
-    const cs=getComputedStyle(input);
-    span.textContent=input.value||input.placeholder||'';
-    span.style.cssText=`display:inline-block;width:${cs.width};min-height:${cs.height};font:${cs.font};color:${cs.color};background:${cs.backgroundColor};border-bottom:${cs.borderBottom};padding:${cs.padding};line-height:${cs.lineHeight};letter-spacing:${cs.letterSpacing};text-align:${cs.textAlign};white-space:pre-wrap;vertical-align:middle;box-sizing:border-box;border-radius:${cs.borderRadius};`;
-    if(input.classList.contains('header-name-input')||input.closest('.pair-name-display')) span.style.width='100%';
-    input.style.display='none';
-    input.parentNode.insertBefore(span,input.nextSibling);
-    replaced.push({input,span});
+  const targets = document.querySelectorAll(
+    '.tag-input, .field-input, .trait-input, .relation-input, .stat-input, .header-name-input, .pair-name-display input, .icon-box-input'
+  );
+
+  const replaced = [];
+
+  targets.forEach((input) => {
+    const span = document.createElement('span');
+    const cs = getComputedStyle(input);
+
+    span.textContent = input.value || input.placeholder || '';
+    span.style.cssText = `
+      display:inline-block;
+      width:${cs.width};
+      min-height:${cs.height};
+      font:${cs.font};
+      color:${cs.color};
+      background:${cs.backgroundColor};
+      border-top:${cs.borderTop};
+      border-right:${cs.borderRight};
+      border-bottom:${cs.borderBottom};
+      border-left:${cs.borderLeft};
+      padding:${cs.padding};
+      line-height:${cs.lineHeight};
+      letter-spacing:${cs.letterSpacing};
+      text-align:${cs.textAlign};
+      white-space:pre-wrap;
+      vertical-align:middle;
+      box-sizing:border-box;
+      border-radius:${cs.borderRadius};
+    `;
+
+    if (
+      input.classList.contains('header-name-input') ||
+      input.closest('.pair-name-display')
+    ) {
+      span.style.width = '100%';
+    }
+
+    input.style.display = 'none';
+    input.parentNode.insertBefore(span, input.nextSibling);
+    replaced.push({ input, span });
   });
+
   return replaced;
 }
 function restoreInputsAfterExport(replaced) {
