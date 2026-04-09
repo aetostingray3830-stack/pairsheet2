@@ -43,7 +43,12 @@ body {
 /* ── 背景レイヤー ── */
 #bgLayer {
   position: fixed; inset: 0; z-index: 0;
-  background: linear-gradient(135deg, #1a0a2e 0%, #0a1a2e 50%, #0e0a1e 100%);
+  bbackground: linear-gradient(
+  180deg,
+  rgba(255,255,255,0.35) 0%,
+  rgba(255,255,255,0.18) 40%,
+  rgba(255,255,255,0.08) 100%
+);
   background-size: cover; background-position: center;
   transition: background 0.4s;
 }
@@ -64,7 +69,7 @@ body {
 .btn-export:hover { transform: translateY(-1px); background: rgba(255,255,255,0.25); }
 .btn-secondary { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15); }
 .btn-secondary:hover { background: rgba(255,255,255,0.15); }
-.toolbar-group { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.06); padding: 4px 9px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+.toolbar-group { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.18); padding: 4px 9px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
 .toolbar-group label { font-size: 10px; color: rgba(255,255,255,0.45); white-space: nowrap; }
 .tc { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; flex-shrink: 0; }
 .tc.active { border-color: white; }
@@ -90,7 +95,9 @@ body {
   width: 1000px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+  box-shadow:
+  0 0 0 1px rgba(255,255,255,0.2) inset,
+  0 10px 30px rgba(0,0,0,0.4);
   background: rgba(255,255,255,0.04);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -137,7 +144,8 @@ body {
 /* char panel */
 .char-panel {
   background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
   border-right: 1px solid rgba(255,255,255,0.08);
   padding: 12px; display: flex; flex-direction: column; gap: 10px;
 }
