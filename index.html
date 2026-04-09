@@ -266,6 +266,39 @@ body {
 }
   .trait-input:focus { border-bottom-color: rgba(255,255,255,0.8); }
 
+  .relation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.relation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.relation-label {
+  font-size: 9px;
+  color: var(--panel-label-color);
+  letter-spacing: 0.5px;
+}
+
+.relation-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  font-size: 11px;
+  color: var(--panel-text-color);
+  outline: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  padding: 2px 0;
+}
+
+.relation-input:focus {
+  border-bottom-color: rgba(255,255,255,0.8);
+}
+
 /* ── CENTER PANEL ── */
 .center-panel {
   background: rgba(45,10,78,0.5);
@@ -469,8 +502,10 @@ body {
           <div class="field-group"><div class="field-label">GENDER</div><input class="field-input" placeholder="性別"></div>
         </div>
         <div class="stats-section" id="stats1"></div>
-        <div><div class="section-title">Physical Appearance</div><div class="trait-list" id="traits1a"></div></div>
-        <div><div class="section-title">Other Features</div><div class="trait-list" id="traits1b"></div></div>
+        <div><div class="section-title">Relationship</div><div class="relation-list" id="rel1a"></div></div>
+<div><div class="section-title">First Impression</div><div class="relation-list" id="rel1b"></div></div>
+<div><div class="section-title">Current Distance</div><div class="relation-list" id="rel1c"></div></div>
+<div><div class="section-title">Keywords</div><div class="relation-list" id="rel1d"></div></div>
       </div>
 
       <!-- CENTER -->
@@ -514,8 +549,10 @@ body {
           <div class="field-group"><div class="field-label">GENDER</div><input class="field-input" placeholder="性別"></div>
         </div>
         <div class="stats-section" id="stats2"></div>
-        <div><div class="section-title">Physical Appearance</div><div class="trait-list" id="traits2a"></div></div>
-        <div><div class="section-title">Other Features</div><div class="trait-list" id="traits2b"></div></div>
+        <div><div class="section-title">Relationship</div><div class="relation-list" id="rel1a"></div></div>
+<div><div class="section-title">First Impression</div><div class="relation-list" id="rel1b"></div></div>
+<div><div class="section-title">Current Distance</div><div class="relation-list" id="rel1c"></div></div>
+<div><div class="section-title">Keywords</div><div class="relation-list" id="rel1d"></div></div>
       </div>
 
     </div>
@@ -627,13 +664,19 @@ function applyTagColor(picker) {
 }
 
 /* ========== TRAITS ========== */
-function buildTraits(id, n) {
-  const el = document.getElementById(id); el.innerHTML='';
-  for(let i=0;i<n;i++) {
-    const d=document.createElement('div'); d.className='trait-item';
-    d.innerHTML='<span class="trait-bullet">・</span><input class="trait-input" placeholder="特徴を入力...">';
+  function buildRelationFields(id, labels) {
+  const el = document.getElementById(id);
+  el.innerHTML = "";
+
+  labels.forEach((label) => {
+    const d = document.createElement("div");
+    d.className = "relation-item";
+    d.innerHTML = `
+      <div class="relation-label">${label}</div>
+      <input class="relation-input" placeholder="入力...">
+    `;
     el.appendChild(d);
-  }
+  });
 }
 
 /* ========== PORTRAIT ========== */
@@ -975,8 +1018,15 @@ function restoreInputsAfterExport(replaced) {
 
 /* ========== INIT ========== */
 buildStats('stats1'); buildStats('stats2');
-buildTraits('traits1a',3); buildTraits('traits1b',3);
-buildTraits('traits2a',3); buildTraits('traits2b',3);
+buildRelationFields("rel1a", ["Relationship"]);
+buildRelationFields("rel1b", ["First Impression"]);
+buildRelationFields("rel1c", ["Current Distance"]);
+buildRelationFields("rel1d", ["Keyword 1", "Keyword 2", "Keyword 3"]);
+
+buildRelationFields("rel2a", ["Relationship"]);
+buildRelationFields("rel2b", ["First Impression"]);
+buildRelationFields("rel2c", ["Current Distance"]);
+buildRelationFields("rel2d", ["Keyword 1", "Keyword 2", "Keyword 3"]);
 </script>
 </body>
 </html>
