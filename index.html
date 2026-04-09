@@ -484,6 +484,7 @@ body {
     <input type="file" id="bgImgInput" accept="image/*" style="display:none" onchange="setBgImage(this)">
     <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="document.getElementById('centerBgInput').click()">中央画像</button>
     <input type="file" id="centerBgInput" accept="image/*" style="display:none" onchange="loadCenter(this)">
+    <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="clearCenter()">中央削除</button>
     <input type="color" class="tc-inp" value="#1a0a2e" onchange="setBgSolid(this.value)" title="単色背景">
     <button class="btn btn-secondary" style="padding:4px 8px;font-size:10px" onclick="clearBg()">クリア</button>
   </div>
@@ -737,6 +738,18 @@ function setCenterBg(c, sw) {
   if(sw){ document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active')); sw.classList.add('active'); }
 }
 
+function clearCenter() {
+  const center = document.getElementById('centerImg');
+
+  center.style.backgroundImage = '';
+  center.style.display = 'none';
+
+  document.getElementById('centerLabel').style.display = 'block';
+
+  // ファイルinputもリセット（同じ画像再選択できるように）
+  document.getElementById('centerBgInput').value = '';
+}
+  
 /* ========== PAGE BACKGROUND ========== */
 function setBgImage(inp) {
   if(!inp.files[0]) return;
