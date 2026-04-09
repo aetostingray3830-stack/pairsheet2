@@ -994,36 +994,89 @@ function resetSheet() { if(confirm('リセットしますか？')) location.relo
 async function exportPNG() {
   const ov = document.getElementById('exportOverlay');
   ov.classList.add('show');
+  await document.fonts.ready;
 
   const sheet = document.getElementById('sheet');
+  const bgLayer = document.getElementById('bgLayer');
 
-  // ★ここが重要
   sheet.classList.add('export-mode');
 
-  document.getElementById('colorPickRow').style.display='none';
+  document.getElementById('colorPickRow').style.display = 'none';
+  if (selectedItem) selectedItem.classList.remove('selected');
+  document.querySelectorAll('.float-del').forEach(b => b.style.opacity = '0');
+  document.querySelectorAll('.float-txt-resize').forEach(b => b.style.opacity = '0');
+  document.querySelectorAll('.resize-handle').forEach(b => b.style.opacity = '0');
+  document.querySelectorAll('input[type=file]').forEach(i => i.style.display = 'none');
+  document.querySelectorAll('.portrait-color-btn').forEach(b => b.style.display = 'none');
+  document.querySelectorAll('.tag-color-btn').forEach(b => b.style.display = 'none');
 
-  await new Promise(r=>setTimeout(r,100));
+  const snapData = [];
+  document.querySelectorAll('.float-img-wrap').forEach(wrap => {
+    const img = wrap.querySelector('img');
+    const ratio = wrap._ratio || (img.naturalWidth / img.naturalHeight);
+    const w = wrap.offsetWidth;
+    const h = Math.round(w / ratio);
+    const prevH = wrap.style.height;
+    wrap.style.height = h + 'px';
+    snapData.push({ wrap, prevH });
+  });
+
+  const replaced = replaceInputsForExport();
+  await new Promise(r => setTimeout(r, 160));
 
   try {
-    const canvas = await html2canvas(sheet, {
+    const sheetCanvas = await html2canvas(sheet, {
       scale: 2,
       useCORS: true,
-      backgroundColor: null
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false
     });
+
+    const rect = sheet.getBoundingClientRect();
+    const bgCanvas = await html2canvas(bgLayer, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#1a0a2e',
+      logging: false,
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY,
+      width: rect.width,
+      height: rect.height,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight
+    });
+
+    const finalCanvas = document.createElement('canvas');
+    finalCanvas.width = sheetCanvas.width;
+    finalCanvas.height = sheetCanvas.height;
+    const ctx = finalCanvas.getContext('2d');
+
+    ctx.drawImage(bgCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
+    ctx.drawImage(sheetCanvas, 0, 0);
 
     const a = document.createElement('a');
     a.download = 'pair_sheet.png';
-    a.href = canvas.toDataURL('image/png');
+    a.href = finalCanvas.toDataURL('image/png');
     a.click();
-
-  } catch(e){
+  } catch (e) {
     alert('書き出し失敗: ' + e.message);
   }
 
-  // 元に戻す
-  sheet.classList.remove('export-mode');
-  document.getElementById('colorPickRow').style.display='flex';
+  restoreInputsAfterExport(replaced);
+  snapData.forEach(({ wrap, prevH }) => {
+    wrap.style.height = prevH;
+  });
 
+  sheet.classList.remove('export-mode');
+  document.getElementById('colorPickRow').style.display = 'flex';
+  document.querySelectorAll('.float-del').forEach(b => b.style.opacity = '');
+  document.querySelectorAll('.float-txt-resize').forEach(b => b.style.opacity = '');
+  document.querySelectorAll('.resize-handle').forEach(b => b.style.opacity = '');
+  document.querySelectorAll('input[type=file]').forEach(i => i.style.display = '');
+  document.querySelectorAll('.portrait-color-btn').forEach(b => b.style.display = '');
+  document.querySelectorAll('.tag-color-btn').forEach(b => b.style.display = '');
   ov.classList.remove('show');
 }
 
