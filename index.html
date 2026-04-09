@@ -707,14 +707,12 @@ function applyTagColor(picker) {
   el.innerHTML = "";
 
   labels.forEach((label) => {
-    const d = document.createElement("div");
-    d.className = "relation-item";
-    d.innerHTML = `
-      <div class="relation-label">${label}</div>
-      <input class="relation-input" placeholder="入力...">
-    `;
-    el.appendChild(d);
-  });
+  const d = document.createElement("div");
+  d.className = "relation-item";
+  d.innerHTML = `
+    <input class="relation-input" placeholder="${label}">
+  `;
+});
 }
 
 /* ========== PORTRAIT ========== */
